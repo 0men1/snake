@@ -9,6 +9,11 @@
                 ".next/**",
                 "dist/**"
             ]
+        },
+        "dev": {
+            "dependsOn": [
+                "^dev"
+            ]
         }
     }
 }
