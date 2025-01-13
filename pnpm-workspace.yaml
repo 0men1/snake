@@ -1,0 +1,4 @@
+packages:
+  - 'shared'
+  - 'snake-game-client'
+  - 'snake-game-server'

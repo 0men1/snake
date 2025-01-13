@@ -1,0 +1,10 @@
+{
+    "name": "@snake-game/root",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "shared/*",
+        "snake-game-client/*",
+        "snake-game-server/*"
+    ]
+}
