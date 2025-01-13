@@ -7,20 +7,25 @@ class DuelSnakeGame extends SnakeEngine_1.SnakeEngine {
     constructor(boardSize = 20, winScore = 50) {
         super(boardSize);
         this.SNAKE_LENGTH = 3;
+        this.state = this.getInitialState(winScore);
+    }
+    getInitialState(winScore) {
+        const player1Snake = this.createInitialSnake(5, 10, types_1.Direction.RIGHT);
+        const player2Snake = this.createInitialSnake(15, 10, types_1.Direction.LEFT);
         this.state = {
             players: [
                 {
-                    snake: this.createInitialSnake(5, 10, types_1.Direction.RIGHT),
-                    food: { x: 7, y: 10 },
-                    score: 0,
+                    snake: player1Snake,
                     direction: types_1.Direction.RIGHT,
+                    food: { x: 0, y: 0 },
+                    score: 0,
                     isAlive: true
                 },
                 {
-                    snake: this.createInitialSnake(15, 10, types_1.Direction.LEFT),
-                    food: { x: 13, y: 10 },
-                    score: 0,
+                    snake: player2Snake,
                     direction: types_1.Direction.LEFT,
+                    food: { x: 0, y: 0 },
+                    score: 0,
                     isAlive: true
                 }
             ],
@@ -29,28 +34,7 @@ class DuelSnakeGame extends SnakeEngine_1.SnakeEngine {
         };
         this.state.players[0].food = this.generateFood(0);
         this.state.players[1].food = this.generateFood(1);
-    }
-    getInitialState(winScore) {
-        return {
-            players: [
-                {
-                    snake: this.createInitialSnake(5, 10, types_1.Direction.RIGHT),
-                    food: this.generateFood(0),
-                    score: 0,
-                    direction: types_1.Direction.RIGHT,
-                    isAlive: true
-                },
-                {
-                    snake: this.createInitialSnake(15, 10, types_1.Direction.LEFT),
-                    food: this.generateFood(1),
-                    score: 0,
-                    direction: types_1.Direction.LEFT,
-                    isAlive: true
-                }
-            ],
-            winScore,
-            isGameOver: false
-        };
+        return this.state;
     }
     createInitialSnake(x, y, direction) {
         const snake = [];

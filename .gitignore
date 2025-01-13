@@ -12,6 +12,9 @@
 # testing
 /coverage
 
+
+.turbo
+
 **/node_modules
 
 **/.next

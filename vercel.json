@@ -1,12 +1,12 @@
 {
     "framework": "nextjs",
-    "buildCommand": "cd ../shared && pnpm install && pnpm build && cd ../snake-game-client && pnpm install && pnpm build",
+    "buildCommand": "pnpm turbo build",
     "installCommand": "pnpm install",
-    "outputDirectory": ".next",
+    "outputDirectory": "snake-game-client/.next",
     "rewrites": [
-        {
-            "source": "/(.*)",
-            "destination": "/$1"
-        }
+      {
+        "source": "/(.*)",
+        "destination": "/$1"
+      }
     ]
-}
+  }

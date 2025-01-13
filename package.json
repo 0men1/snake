@@ -2,9 +2,17 @@
     "name": "@snake-game/root",
     "version": "1.0.0",
     "private": true,
+    "devDependencies": {
+        "turbo": "latest"
+    },
+    "scripts": {
+        "build": "turbo run build",
+        "dev": "turbo run dev"
+    },
     "workspaces": [
         "shared/*",
         "snake-game-client/*",
         "snake-game-server/*"
-    ]
+    ],
+    "packageManager": "pnpm@9.0.0"
 }

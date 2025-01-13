@@ -1,7 +1,7 @@
 
 
-import { GameServer } from "./GameServer";
+// import { GameServer } from "./GameServer";
 
-const PORT = process.env.PORT || "8080";
+// const PORT = process.env.PORT || "8080";
 
-new GameServer(parseInt(PORT));
+// new GameServer(parseInt(PORT));
