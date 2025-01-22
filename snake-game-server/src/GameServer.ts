@@ -1,7 +1,6 @@
 import { WebSocketServer } from "ws";
 import { Game } from "./types";
 import { DuelSnakeGame } from "@shared/engines/DuelSnakeGame";
-import { createServer } from "http";
 
 export class GameServer {
     private wss: WebSocketServer;
@@ -10,11 +9,9 @@ export class GameServer {
     private currID: number = 0;
 
     constructor() {
-        const server = createServer();
-        this.wss = new WebSocketServer({ server, path: process.env.path }, () => {
+        this.wss = new WebSocketServer({ port: 8080 }, () => {
             console.log("Server activated: waiting for clients")
         });
-
         this.wss.on('connection', (socket: WebSocket) => {
             console.log("Client detected");
             this.handleNewPlayer(socket)
@@ -31,8 +28,6 @@ export class GameServer {
         }
     }
 
-    private handleDisconnect() { }
-
     private createGame(player1: WebSocket, player2: WebSocket) {
         const gameId = this.currID++;
         const gameRoom = {
@@ -48,8 +43,4 @@ export class GameServer {
             }))
         })
     }
-
-    private broadcastGameState() { }
-    checkCollision() { }
-    validateMove() { }
 }

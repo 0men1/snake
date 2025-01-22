@@ -71,6 +71,7 @@ const MenuCard: React.FC = () => {
         router.push('/game/solo/');
         break;
       case 'multiplayer':
+        // router.push('/game/online/')
         setShowMultiplayerForm(true);
         break;
     }

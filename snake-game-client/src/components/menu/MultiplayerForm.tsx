@@ -24,9 +24,13 @@ const MultiplayerForm = ({ onClose }: MultiplayerFormProps) => {
        router.push('/game/local');
    };
 
-   const handleQueue = () => {
-       console.log('Queuing with name:', playerName);
-   };
+   const handleOnlinePlay = () => {
+        router.push('/game/online')
+   }
+
+//    const handleQueue = () => {
+//        console.log('Queuing with name:', playerName);
+//    };
 
    return (
        <div className="fixed inset-0 bg-black/80 flex items-center justify-center backdrop-blur-sm">
@@ -67,7 +71,7 @@ const MultiplayerForm = ({ onClose }: MultiplayerFormProps) => {
                            />
                            <Button 
                                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg disabled:opacity-50"
-                               onClick={handleQueue}
+                               onClick={handleOnlinePlay}
                                disabled={!playerName.trim()}
                            >
                                Queue for Game
