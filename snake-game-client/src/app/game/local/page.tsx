@@ -1,5 +1,5 @@
 'use client'
-import { DuelSnakeGame } from "@shared/engines/DuelSnakeGame";
+import { SnakeGame } from "@shared/engines/SnakeGame";
 import { Direction } from "@shared/types";
 import DuelGameBoard from "@/components/game/DuelGameBoard";
 import GameOver from "@/components/game/GameOver";
@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 
 
 export default function LocalMultiplayerGame() {
-    const gameRef = useRef<DuelSnakeGame>(new DuelSnakeGame(20));
+    const gameRef = useRef<SnakeGame>(new SnakeGame(20, 50, "local"));
     const [gameState, setGameState] = useState(gameRef.current.getState());
 
     useEffect(() => {

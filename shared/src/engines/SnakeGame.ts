@@ -1,45 +1,48 @@
 import { SnakeEngine } from "./SnakeEngine";
-import { Direction, DuelGameState, Position } from "../types";
+import { Direction, GameState, Position, GameMode } from "../types";
 
 
-export class DuelSnakeGame extends SnakeEngine {
-    protected state: DuelGameState
+export class SnakeGame extends SnakeEngine {
+    protected state: GameState
     private SNAKE_LENGTH: number;
 
-    constructor(boardSize: number = 20, winScore: number = 50) {
+    constructor(boardSize: number = 20, winScore: number = 50, gameMode: GameMode) {
         super(boardSize)
         this.SNAKE_LENGTH = 3;
-        this.state = this.getInitialState(winScore)
+        this.state = this.getInitialState(winScore, gameMode)
     }
 
-    private getInitialState(winScore: number): DuelGameState {
+    private getInitialState(winScore: number, gameMode: GameMode): GameState {
         const player1Snake = this.createInitialSnake(5, 10, Direction.RIGHT);
-        const player2Snake = this.createInitialSnake(15, 10, Direction.LEFT);
-        
+
         this.state = {
             players: [
                 {
                     snake: player1Snake,
                     direction: Direction.RIGHT,
-                    food: {x: 0, y: 0},
+                    food: { x: 0, y: 0 },
                     score: 0,
                     isAlive: true
                 },
-                {
-                    snake: player2Snake,
-                    direction: Direction.LEFT,
-                    food: {x: 0, y: 0},
-                    score: 0,
-                    isAlive: true
-                }
             ],
             winScore,
-            isGameOver: false
+            isGameOver: false,
+            gameMode
         };
 
         this.state.players[0].food = this.generateFood(0);
-        this.state.players[1].food = this.generateFood(1);
-    
+
+        if (gameMode != "solo") {
+            const player2Snake = this.createInitialSnake(15, 10, Direction.LEFT);
+            this.state.players.push({
+                snake: player2Snake,
+                direction: Direction.LEFT,
+                food: { x: 0, y: 0 },
+                score: 0,
+                isAlive: true
+            })
+            this.state.players[1].food = this.generateFood(1);
+        }
         return this.state;
     }
 
@@ -73,18 +76,27 @@ export class DuelSnakeGame extends SnakeEngine {
     }
 
     private isPositionOccupied(p: Position): boolean {
-        return this.state.players.some(player =>
-            player.snake.some(segment =>
-                segment.x === p.x && segment.y === p.y
+        if (this.state.gameMode != "solo") {
+            return this.state.players.some(player =>
+                player.snake.some(segment =>
+                    segment.x === p.x && segment.y === p.y
+                )
             )
-        )
+        }
+        return false;
     }
 
     override update(): void {
-        if (this.state.isGameOver) return;
+        if (this.state.isGameOver) {
+            console.log("GAme is joever")
+            return
+        }
 
         this.state.players.forEach((player, index) => {
-            if (!player.isAlive) return;
+            if (!player.isAlive) {
+                console.log("Player is ded")
+                return;
+            }
 
             const head = player.snake[0]
             const newHead = { ...head }
@@ -124,16 +136,18 @@ export class DuelSnakeGame extends SnakeEngine {
     private checkCollision(newHead: Position, playerIndex: number): boolean {
         if (this.checkBoundaryCollision(newHead)) return true;
 
-        const otherPlayerIndex = playerIndex === 0 ? 1 : 0;
-        const otherPlayer = this.state.players[otherPlayerIndex]
+        if (this.state.gameMode != "solo") {
+            const otherPlayerIndex = playerIndex === 0 ? 1 : 0;
+            const otherPlayer = this.state.players[otherPlayerIndex]
 
-        if (otherPlayer.snake.some(segment =>
-            segment.x === newHead.x && segment.y === newHead.y
-        )) {
-            if (this.state.players[playerIndex].score <= otherPlayer.score) {
-                return true;
-            } else {
-                otherPlayer.isAlive = false;
+            if (otherPlayer.snake.some(segment =>
+                segment.x === newHead.x && segment.y === newHead.y
+            )) {
+                if (this.state.players[playerIndex].score <= otherPlayer.score) {
+                    return true;
+                } else {
+                    otherPlayer.isAlive = false;
+                }
             }
         }
         return false;
@@ -145,11 +159,17 @@ export class DuelSnakeGame extends SnakeEngine {
     }
 
     private checkWinByScore(): void {
-        const alivePlayers = this.state.players.filter(p => p.isAlive)
-
-        if (alivePlayers.length === 1) {
-            this.state.isGameOver = true;
-            this.state.winner = this.state.players.findIndex(p => p.isAlive)
+        if (this.state.gameMode === "solo") {
+            if (this.state.players[0].score === this.state.winScore) {
+                this.state.isGameOver = true;
+                this.state.winner = 0
+            }
+        } else {
+            const alivePlayers = this.state.players.filter(p => p.isAlive)
+            if (alivePlayers.length === 1) {
+                this.state.isGameOver = true;
+                this.state.winner = this.state.players.findIndex(p => p.isAlive)
+            }
         }
     }
 
@@ -173,6 +193,6 @@ export class DuelSnakeGame extends SnakeEngine {
     }
 
     override reset(): void {
-        this.state = this.getInitialState(this.state.winScore);
+        this.state = this.getInitialState(this.state.winScore, this.state.gameMode);
     }
 }

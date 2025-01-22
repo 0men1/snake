@@ -4,18 +4,12 @@ export declare enum Direction {
     LEFT = "LEFT",
     RIGHT = "RIGHT"
 }
+export type GameMode = 'solo' | 'local' | 'online';
 export interface Position {
     x: number;
     y: number;
 }
 export interface GameState {
-    snake: Position[];
-    food: Position;
-    direction: Direction;
-    score: number;
-    isGameOver: boolean;
-}
-export interface DuelGameState {
     players: {
         snake: Position[];
         food: Position;
@@ -26,4 +20,5 @@ export interface DuelGameState {
     winScore: number;
     isGameOver: boolean;
     winner?: number;
+    gameMode: GameMode;
 }

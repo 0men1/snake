@@ -1,12 +1,10 @@
 import { WebSocketServer } from "ws";
 import { Game } from "./types";
-import { DuelSnakeGame } from "@shared/engines/DuelSnakeGame";
 
 export class GameServer {
     private wss: WebSocketServer;
     private waitingPlayers: WebSocket[] = [];
     private activeGames = new Map<number, Game>();
-    private currID: number = 0;
 
     constructor() {
         this.wss = new WebSocketServer({ port: 8080 }, () => {
@@ -15,8 +13,30 @@ export class GameServer {
         this.wss.on('connection', (socket: WebSocket) => {
             console.log("Client detected");
             this.handleNewPlayer(socket)
+
+            socket.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data)
+                    switch (data.type) {
+                        case "NEW_GAME":
+                            console.log("New Game")
+                            break
+                        case "MOVE":
+                            console.log("Move")
+                            break
+                    }
+                } catch (error) {
+                    console.error("Invalid message format")
+                }
+            }
         })
     }
+
+    private handleNewGame(socket: WebSocket[], data: any) {
+        
+    }
+
+    private handleMove(socket: WebSocket, data: any) {}
 
     private handleNewPlayer(socket: WebSocket) {
         if (this.waitingPlayers.length === 0) {
@@ -24,23 +44,7 @@ export class GameServer {
             socket.send(JSON.stringify({ type: "WAITING" }))
         } else {
             const opp = this.waitingPlayers.pop();
-            this.createGame(socket, opp!)
+            // this.createGame(socket, opp!)
         }
-    }
-
-    private createGame(player1: WebSocket, player2: WebSocket) {
-        const gameId = this.currID++;
-        const gameRoom = {
-            game: new DuelSnakeGame(),
-            players: [player1, player2]
-        };
-        this.activeGames.set(gameId, gameRoom);
-        this.activeGames.get(gameId)?.players.forEach((player, index) => {
-            player.send(JSON.stringify({
-                type: "GAME_START",
-                playerId: index,
-                gameId
-            }))
-        })
     }
 }

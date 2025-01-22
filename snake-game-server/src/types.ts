@@ -1,11 +1,9 @@
-import {DuelSnakeGame} from "@shared/engines/DuelSnakeGame"
-
+import { SnakeGame } from "@shared/engines/SnakeGame"
 
 export interface Position {
     x: number;
     y: number;
 }
-
 
 export enum Direction {
     UP,
@@ -26,6 +24,6 @@ export interface GameState {
 }
 
 export interface Game {
-    game: DuelSnakeGame;
+    game: SnakeGame;
     players: WebSocket[]
 }

@@ -1,9 +1,9 @@
 import { SnakeEngine } from "./SnakeEngine";
-import { Direction, DuelGameState, Position } from "../types";
-export declare class DuelSnakeGame extends SnakeEngine {
-    protected state: DuelGameState;
+import { Direction, GameState, Position, GameMode } from "../types";
+export declare class SnakeGame extends SnakeEngine {
+    protected state: GameState;
     private SNAKE_LENGTH;
-    constructor(boardSize?: number, winScore?: number);
+    constructor(boardSize: number | undefined, winScore: number | undefined, gameMode: GameMode);
     private getInitialState;
     private createInitialSnake;
     private generateFood;
@@ -24,6 +24,7 @@ export declare class DuelSnakeGame extends SnakeEngine {
         winScore: number;
         isGameOver: boolean;
         winner?: number;
+        gameMode: GameMode;
     };
     reset(): void;
 }

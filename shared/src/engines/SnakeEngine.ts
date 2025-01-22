@@ -1,8 +1,8 @@
-import { Direction, DuelGameState, GameState, Position } from "../types";
+import { Direction, GameState, Position } from "../types";
 
 export abstract class SnakeEngine {
     protected boardSize: number;
-    protected abstract state: DuelGameState | GameState;
+    protected abstract state: GameState;
 
     constructor(boardSize: number) {
         this.boardSize = boardSize
@@ -10,7 +10,7 @@ export abstract class SnakeEngine {
 
     abstract update(): void
     abstract changeDirection(direction: Direction, playerIndex?: number): void;
-    abstract getState(): DuelGameState | GameState;
+    abstract getState(): GameState;
     abstract reset(): void;
 
     protected checkBoundaryCollision(position: Position): boolean {

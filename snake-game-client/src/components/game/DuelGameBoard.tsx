@@ -1,8 +1,8 @@
-import { DuelGameState } from "@/../../shared/src/types";
+import { GameState } from "@/../../shared/src/types";
 import React, { useEffect, useRef } from "react";
 
 interface DuelGameBoardProps {
-    gameState: DuelGameState
+    gameState: GameState
 }
 
 const DuelGameBoard: React.FC<DuelGameBoardProps> = ({ gameState }) => {

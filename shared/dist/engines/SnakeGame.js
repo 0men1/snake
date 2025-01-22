@@ -1,17 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DuelSnakeGame = void 0;
+exports.SnakeGame = void 0;
 const SnakeEngine_1 = require("./SnakeEngine");
 const types_1 = require("../types");
-class DuelSnakeGame extends SnakeEngine_1.SnakeEngine {
-    constructor(boardSize = 20, winScore = 50) {
+class SnakeGame extends SnakeEngine_1.SnakeEngine {
+    constructor(boardSize = 20, winScore = 50, gameMode) {
         super(boardSize);
         this.SNAKE_LENGTH = 3;
-        this.state = this.getInitialState(winScore);
+        this.state = this.getInitialState(winScore, gameMode);
     }
-    getInitialState(winScore) {
+    getInitialState(winScore, gameMode) {
         const player1Snake = this.createInitialSnake(5, 10, types_1.Direction.RIGHT);
-        const player2Snake = this.createInitialSnake(15, 10, types_1.Direction.LEFT);
         this.state = {
             players: [
                 {
@@ -21,19 +20,23 @@ class DuelSnakeGame extends SnakeEngine_1.SnakeEngine {
                     score: 0,
                     isAlive: true
                 },
-                {
-                    snake: player2Snake,
-                    direction: types_1.Direction.LEFT,
-                    food: { x: 0, y: 0 },
-                    score: 0,
-                    isAlive: true
-                }
             ],
             winScore,
-            isGameOver: false
+            isGameOver: false,
+            gameMode
         };
         this.state.players[0].food = this.generateFood(0);
-        this.state.players[1].food = this.generateFood(1);
+        if (gameMode != "solo") {
+            const player2Snake = this.createInitialSnake(15, 10, types_1.Direction.LEFT);
+            this.state.players.push({
+                snake: player2Snake,
+                direction: types_1.Direction.LEFT,
+                food: { x: 0, y: 0 },
+                score: 0,
+                isAlive: true
+            });
+            this.state.players[1].food = this.generateFood(1);
+        }
         return this.state;
     }
     createInitialSnake(x, y, direction) {
@@ -143,7 +146,7 @@ class DuelSnakeGame extends SnakeEngine_1.SnakeEngine {
         return { ...this.state };
     }
     reset() {
-        this.state = this.getInitialState(this.state.winScore);
+        this.state = this.getInitialState(this.state.winScore, this.state.gameMode);
     }
 }
-exports.DuelSnakeGame = DuelSnakeGame;
+exports.SnakeGame = SnakeGame;

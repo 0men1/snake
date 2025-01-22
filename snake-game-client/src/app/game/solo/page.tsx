@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { SoloSnakeGame } from '@/api/engines/SoloSnakeGame'
 import { useGameLoop } from '@/lib/hooks/useGameLoop'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -9,11 +8,12 @@ import { Direction } from '@shared/types'
 import GameLoading from '@/components/loading/GameLoading'
 import GameOver from '@/components/game/GameOver'
 import SoloGameBoard from '@/components/game/SoloGameBoard'
+import { SnakeGame } from '@shared/engines/SnakeGame'
 
 export default function SinglePlayerGame() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
-    const gameRef = useRef<SoloSnakeGame>(new SoloSnakeGame(20));
+    const gameRef = useRef<SnakeGame>(new SnakeGame(20, 50, "solo"));
     const [gameState, setGameState] = useState(gameRef.current.getState());
     const inputQueueRef = useRef<Direction[]>([]);
 
@@ -68,12 +68,12 @@ export default function SinglePlayerGame() {
     useGameLoop(() => {
         if (!gameState.isGameOver && !isLoading) {
             if (inputQueueRef.current.length > 0) {
-                gameRef.current.changeDirection(inputQueueRef.current.shift()!);
+                gameRef.current.changeDirection(inputQueueRef.current.shift()!, 0);
             }
             gameRef.current.update();
             setGameState(gameRef.current.getState());
         }
-    }, 10); // Increased from 10 to 15 FPS
+    }, 10);
 
     const handleBackToMenu = () => {
         router.push('/');
@@ -90,7 +90,7 @@ export default function SinglePlayerGame() {
                     Back to Menu
                 </Button>
                 <div className='text-white p-2 bg-white/20 rounded-md'>
-                    Score: {gameState.score}
+                    Score: {gameState.players[0].score}
                 </div>
             </div>
             {
@@ -101,7 +101,7 @@ export default function SinglePlayerGame() {
                     <GameOver
                         title='Game Over!'
                         description='You went out of bounds!'
-                        points={gameState.score}
+                        points={gameState.players[0].score}
                         gameRef={gameRef}
                         setGameState={setGameState}
                         onExit={handleBackToMenu}

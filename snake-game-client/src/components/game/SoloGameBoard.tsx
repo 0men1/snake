@@ -70,7 +70,7 @@ const SoloGameBoard: React.FC<SoloGameBoardProps> = ({ gameState }) => {
         // Draw food
         ctx.fillStyle = '#3882F6';
         ctx.beginPath();
-        ctx.roundRect( gameState.food.x * CELL_SIZE, gameState.food.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, 4);
+        ctx.roundRect( gameState.players[0].food.x * CELL_SIZE, gameState.players[0].food.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, 4);
         ctx.fill();
 
         // Continue animation if needed
@@ -104,27 +104,27 @@ const SoloGameBoard: React.FC<SoloGameBoardProps> = ({ gameState }) => {
         }
 
         // Reset positions if snake length is 1 (new game)
-        if (gameState.snake.length === 1) {
+        if (gameState.players[0].snake.length === 1) {
             positionsRef.current = [];
         }
 
         // Update target positions
-        while (positionsRef.current.length < gameState.snake.length) {
-            const segment = gameState.snake[positionsRef.current.length];
+        while (positionsRef.current.length < gameState.players[0].snake.length) {
+            const segment = gameState.players[0].snake[positionsRef.current.length];
             const gridX = segment.x * CELL_SIZE;
             const gridY = segment.y * CELL_SIZE;
             positionsRef.current.push({ currentX: gridX, currentY: gridY, targetX: gridX, targetY: gridY });
         }
 
         // Update existing positions' targets
-        gameState.snake.forEach((segment, i) => {
+        gameState.players[0].snake.forEach((segment, i) => {
             const pos = positionsRef.current[i];
             pos.targetX = segment.x * CELL_SIZE;
             pos.targetY = segment.y * CELL_SIZE;
         });
 
         // Remove extra positions if snake is shorter
-        positionsRef.current.length = gameState.snake.length;
+        positionsRef.current.length = gameState.players[0].snake.length;
 
         // Start animation
         lastTimeRef.current = 0;
